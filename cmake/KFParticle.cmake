@@ -3,7 +3,7 @@ set(KFParticle_INCLUDE_DIR ${KFParticle_INSTALL_DIR}/include)
 set(KFParticle_LIBRARY_DIR ${KFParticle_INSTALL_DIR}/lib)
 
 ExternalProject_Add(KFParticle_Ext
-        GIT_REPOSITORY  "https://git.cbm.gsi.de/pwg-c2f/analysis/KFParticle.git"
+        GIT_REPOSITORY  "https://github.com/FlowNICA/KFParticle"
         GIT_TAG         "cmake"
         UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
         SOURCE_DIR      "${EXTERNAL_DIR}/KFParticle_src"

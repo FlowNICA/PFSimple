@@ -24,22 +24,26 @@ class OutputContainer {
                                                          px_(particle.GetPx()),
                                                          py_(particle.GetPy()),
                                                          pz_(particle.GetPz()),
-                                                         mass_(particle.GetMass()),
                                                          pdg_(particle.GetPDG()),
                                                          pt_error_(particle.GetErrPt()),
                                                          phi_error_(particle.GetErrPhi()),
                                                          eta_error_(particle.GetErrEta()),
-                                                         mass_error_(particle.GetErrMass()),
                                                          x_(particle.GetX()),
                                                          y_(particle.GetY()),
                                                          z_(particle.GetZ()),
                                                          x_error_(particle.GetErrX()),
                                                          y_error_(particle.GetErrY()),
-                                                         z_error_(particle.GetErrZ()) {}
+                                                         z_error_(particle.GetErrZ()),
+                                                         charge_(int(particle.GetQ())) {
+    particle.GetMass(mass_, mass_error_);
+    for (int i = 0; i < GetDaughterIds().size(); i++)
+      generation_.push_back(0);
+  }
 
   virtual ~OutputContainer() = default;
 
   [[nodiscard]] const std::vector<int>& GetDaughterIds() const { return daughter_ids_; }
+  [[nodiscard]] const std::vector<int>& GetDaughterGenerations() const { return generation_; }
   [[nodiscard]] float GetPx() const { return px_; }
   [[nodiscard]] float GetPy() const { return py_; }
   [[nodiscard]] float GetPz() const { return pz_; }
@@ -49,10 +53,13 @@ class OutputContainer {
   [[nodiscard]] float GetEtaError() const { return eta_error_; }
   [[nodiscard]] float GetMassError() const { return mass_error_; }
   [[nodiscard]] Pdg_t GetPdg() const { return pdg_; }
+  [[nodiscard]] int GetCharge() const { return charge_; }
 
   [[nodiscard]] float GetChi2Prim(int i) const { return values_.chi2_prim[i]; }
   [[nodiscard]] float GetCos(int i) const { return values_.cos[i]; }
+  [[nodiscard]] float GetInvMassDiscr() const { return values_.invmassdisc; }
   [[nodiscard]] float GetChi2Geo(int i) const { return values_.chi2_geo[i]; }
+  [[nodiscard]] float GetCosOpen(int i) const { return values_.cos_open[i]; }
   [[nodiscard]] float GetChi2Topo(int i) const { return values_.chi2_topo[i]; }
   [[nodiscard]] float GetDistance() const { return values_.distance; }
   [[nodiscard]] float GetDistanceToSV() const { return values_.distance_sv; }
@@ -60,6 +67,7 @@ class OutputContainer {
   [[nodiscard]] float GetLdL() const { return values_.l_over_dl; }
   [[nodiscard]] float GetDistanceToPVLine() const { return values_.distance_pv; }
   [[nodiscard]] float GetCosineTopo(int i) const { return values_.cos_topo[i]; }
+  [[nodiscard]] float GetChi2PrimMother() const { return values_.chi2_prim_mother; }
 
   [[nodiscard]] float GetX() const { return x_; }
   [[nodiscard]] float GetY() const { return y_; }
@@ -72,18 +80,21 @@ class OutputContainer {
   [[nodiscard]] bool IsFromPV() const { return values_.is_from_PV; }
 
   void SetId(int id) { id_ = id; }
+  void SetDaughterGenerations(std::vector<int> generation) { generation_ = generation; }
 
   void SetSelectionValues(const SelectionValues& v) { values_ = v; }
 
  protected:
   int id_{-1};
   std::vector<int> daughter_ids_{};
+  std::vector<int> generation_{};
 
   float px_{-1.};
   float py_{-1.};
   float pz_{-1.};
   float mass_{-1.};
   Pdg_t pdg_{-1};
+  int charge_{-1000};
 
   float pt_error_{-1.};
   float phi_error_{-1.};
@@ -96,8 +107,6 @@ class OutputContainer {
   float x_error_{-1.};
   float y_error_{-1.};
   float z_error_{-1.};
-
-  //  int n_hits_{-1};
 
   SelectionValues values_{};
 };

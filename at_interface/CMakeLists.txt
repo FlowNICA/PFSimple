@@ -1,7 +1,6 @@
 set(SOURCES
     ConverterIn.cpp
     ConverterOut.cpp
-    ConverterOutTree.cpp 
     PFSimpleTask.cpp
   )
 
@@ -22,15 +21,11 @@ target_link_libraries(KFMan ${ROOT_LIBRARIES} AnalysisTreeBase AnalysisTreeInfra
 add_dependencies(KFMan KFParticleSimple)
 add_target_property(KFMan COMPILE_FLAGS "-DDO_TPCCATRACKER_EFF_PERFORMANCE -DNonhomogeneousField -DCBM -DUSE_TIMERS")
 
-add_executable(main2 main2.cpp)
-add_dependencies(main2 KFMan)
-add_target_property(main2 COMPILE_FLAGS "-DDO_TPCCATRACKER_EFF_PERFORMANCE -DNonhomogeneousField -DCBM -DUSE_TIMERS")
-target_link_libraries(main2 KFMan KFParticleSimple KFParticleInterface KFParticle Vc)
-
-add_executable(main3 main3.cpp)
-add_dependencies(main3 KFMan)
-add_target_property(main3 COMPILE_FLAGS "-DDO_TPCCATRACKER_EFF_PERFORMANCE -DNonhomogeneousField -DCBM -DUSE_TIMERS")
-target_link_libraries(main3 KFMan KFParticleSimple KFParticleInterface KFParticle Vc)
+add_executable(main_json main_json.cpp)
+add_dependencies(main_json KFMan)
+add_target_property(main_json COMPILE_FLAGS "-DDO_TPCCATRACKER_EFF_PERFORMANCE -DNonhomogeneousField -DCBM -DUSE_TIMERS")
+target_include_directories(main_json PRIVATE ${ROOT_INCLUDE_DIRS})
+target_link_libraries(main_json KFMan KFParticleSimple KFParticleInterface KFParticle Vc)
 
 install(TARGETS KFMan EXPORT KFManTargets
         LIBRARY DESTINATION lib
@@ -55,5 +50,4 @@ install(
         lib
         OPTIONAL
 )
-install (TARGETS main2 RUNTIME DESTINATION bin)
-install (TARGETS main3 RUNTIME DESTINATION bin)
+install (TARGETS main_json RUNTIME DESTINATION bin)
